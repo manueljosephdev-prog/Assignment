@@ -1,0 +1,30 @@
+
+version: "3.8"
+
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      SA_PASSWORD: "Password@123"
+      ACCEPT_EULA: "Y"
+    ports:
+      - "1433:1433"
+
+  product-service:
+    build: ./product-service
+    ports:
+      - "5001:80"
+    depends_on:
+      - sqlserver
+
+  order-service:
+    build: ./order-service
+    ports:
+      - "5002:80"
+    depends_on:
+      - product-service
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "4200:80"
